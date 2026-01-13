@@ -29,7 +29,7 @@ import java.util.Map;
 
 @SuppressWarnings("removal")
 public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
-    public static RecipeType<Enchantment> recipeType = RecipeType.create(JeiEnchants.MODID, "ore", Enchantment.class);
+    public static RecipeType<Enchantment> recipeType = RecipeType.create(JeiEnchants.MODID, "enchant", Enchantment.class);
     public static Map<Enchantment, List<ItemStack>> EnchantBooksCache = new HashMap<>();
     public static Map<Enchantment, List<ItemStack>> CanEnchantItemCache = new HashMap<>();
     public static Map<Enchantment, List<ItemStack>> UnCompatibleEnchantBooksCache = new HashMap<>();
