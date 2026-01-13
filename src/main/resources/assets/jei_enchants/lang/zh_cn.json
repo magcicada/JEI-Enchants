@@ -1,0 +1,48 @@
+{
+  "jei.category.jei_enchants.enchant": "附魔详情",
+
+  "jei_enchants.wrapper.true": "§aYES",
+  "jei_enchants.wrapper.false": "§cNO",
+
+  "jei_enchants.category.desc": "类型 : %s",
+  "jei_enchants.rarity.desc": "稀有度 : %s",
+
+  "jei_enchants.unCompatible.tooltip": "与 %s 附魔冲突",
+  "jei_enchants.weight.tooltip": "权重 : %s",
+  "jei_enchants.level.cost.tooltip":"第 %s 等级花费 %s-%s",
+
+  "jei_enchants.applyAtEnchantingTable.desc": "可在附魔台获取 : %s",
+  "jei_enchants.isTradeable.desc": "可交易获取 : %s",
+  "jei_enchants.isDiscoverable.desc": "是否可发现 : %s",
+  "jei_enchants.isTreasureOnly.desc": "是否为宝藏附魔 : %s",
+  "jei_enchants.isCurse.desc": "是否为诅咒附魔 : %s",
+
+  "jei_enchants.none.desc": "暂无描述",
+
+  "enchantment.rarity.common": "普通",
+  "enchantment.rarity.uncommon": "不常见",
+  "enchantment.rarity.rare": "稀有",
+  "enchantment.rarity.very_rare": "非常稀有",
+  "enchantment.category.armor": "盔甲",
+  "enchantment.category.armor_feet": "足部盔甲",
+  "enchantment.category.armor_legs": "腿部盔甲",
+  "enchantment.category.armor_chest": "胸部盔甲",
+  "enchantment.category.armor_head": "头部盔甲",
+  "enchantment.category.weapon": "武器",
+  "enchantment.category.digger": "挖掘工具",
+  "enchantment.category.fishing_rod": "钓鱼竿",
+  "enchantment.category.trident": "三叉戟",
+  "enchantment.category.breakable": "可破坏物品",
+  "enchantment.category.bow": "弓",
+  "enchantment.category.wearable": "可穿戴物品",
+  "enchantment.category.crossbow": "弩",
+  "enchantment.category.vanishable": "可消失物品",
+  "enchantment.category.hoe": "锄",
+  "enchantment.category.shield": "盾牌",
+  "enchantment.category.anvil": "铁砧",
+  "enchantment.category.shears": "剪刀",
+  "enchantment.category.pickaxe": "镐",
+  "enchantment.category.axe": "斧",
+  "enchantment.category.core_armor": "胸部与腿部盔甲",
+  "enchantment.category.apotheosis.null": "不适用"
+}
