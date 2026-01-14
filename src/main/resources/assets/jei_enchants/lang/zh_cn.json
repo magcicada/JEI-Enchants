@@ -1,6 +1,7 @@
 {
   "jei.category.jei_enchants.enchant": "附魔详情",
 
+  "jei_enchants.level.title": "§6  1 - %s",
   "jei_enchants.wrapper.true": "§aYES",
   "jei_enchants.wrapper.false": "§cNO",
 
@@ -19,10 +20,10 @@
 
   "jei_enchants.none.desc": "暂无描述",
 
-  "enchantment.rarity.common": "普通",
-  "enchantment.rarity.uncommon": "不常见",
-  "enchantment.rarity.rare": "稀有",
-  "enchantment.rarity.very_rare": "非常稀有",
+  "enchantment.rarity.common": "§f普通",
+  "enchantment.rarity.uncommon": "§e不常见",
+  "enchantment.rarity.rare": "§9稀有",
+  "enchantment.rarity.very_rare": "§d非常稀有",
   "enchantment.category.armor": "盔甲",
   "enchantment.category.armor_feet": "足部盔甲",
   "enchantment.category.armor_legs": "腿部盔甲",

@@ -80,52 +80,67 @@ public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
                     Component.translatable(enchantment.getDescriptionId()));
         } else {
             addText(builder, 18, 0,
-                    Component.translatable(enchantment.getDescriptionId()).append("§d  1 - " + enchantment.getMaxLevel()));
+                    Component.translatable(enchantment.getDescriptionId()).append(I18n.get("jei_enchants.level.title", enchantment.getMaxLevel())));
         }
-        addText(builder, 18, 10,
-                Component.literal(ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getNamespace()).withStyle(ChatFormatting.BLUE));
-
-        addText(builder, 18, 20,
-                Component.translatable("jei_enchants.category.desc", Component.translatable("enchantment.category." + enchantment.category.name().toLowerCase())));
-
-        addText(builder, 18, 30,
-                Component.translatable("jei_enchants.rarity.desc", Component.translatable("enchantment.rarity." + enchantment.getRarity().name().toLowerCase())));
-
-        List<FormattedText> rarityTooltip = new ArrayList<>();
-        rarityTooltip.add(Component.translatable("jei_enchants.weight.tooltip", enchantment.getRarity().getWeight()));
-        for (int i = 1; i <= enchantment.getMaxLevel(); i++) {
-            rarityTooltip.add(Component.translatable("jei_enchants.level.cost.tooltip", i, enchantment.getMinCost(i), enchantment.getMaxCost(i)));
+        int height = 0;
+        if (Config.enableModId.get()) {
+            addText(builder, 18, height += 10,
+                    Component.literal(ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getNamespace()).withStyle(ChatFormatting.BLUE));
         }
-        addTooltips(builder, 18, 30, rarityTooltip);
+        if (Config.enableCategory.get()) {
+            addText(builder, 18, height += 10,
+                    Component.translatable("jei_enchants.category.desc", Component.translatable("enchantment.category." + enchantment.category.name().toLowerCase())));
+        }
+        if (Config.enableRarity.get()) {
+            addText(builder, 18, height += 10,
+                    Component.translatable("jei_enchants.rarity.desc", Component.translatable("enchantment.rarity." + enchantment.getRarity().name().toLowerCase())));
 
-        addText(builder, 18, 40,
-                Component.translatable("jei_enchants.applyAtEnchantingTable.desc", getBooleanWrapper(applyAtEnchantingTable(enchantment))));
-
-        addText(builder, 18, 50,
-                Component.translatable("jei_enchants.isTradeable.desc", getBooleanWrapper(enchantment.isTradeable())));
-
-        addText(builder, 18, 60,
-                Component.translatable("jei_enchants.isDiscoverable.desc", getBooleanWrapper(enchantment.isDiscoverable())));
-
-        addText(builder, 18, 70,
-                Component.translatable("jei_enchants.isTreasureOnly.desc", getBooleanWrapper(enchantment.isTreasureOnly())));
-
-        addText(builder, 18, 80,
-                Component.translatable("jei_enchants.isCurse.desc", getBooleanWrapper(enchantment.isCurse())));
-
-        if (I18n.exists(enchantment.getDescriptionId() + ".desc")) {
-            builder.addText(
-                            Minecraft.getInstance().font.getSplitter().splitLines(
-                                    Component.translatable(enchantment.getDescriptionId() + ".desc").withStyle(ChatFormatting.ITALIC),
-                                    getWidth(),
-                                    Style.EMPTY
-                            )
-                            , getWidth(), getHeight() - 90)
-                    .setPosition(0, 90);
-        } else {
-
-            builder.addText(Component.translatable("jei_enchants.none.desc"), getWidth(), getHeight() - 90)
-                    .setPosition(0, 90);
+            List<FormattedText> rarityTooltip = new ArrayList<>();
+            rarityTooltip.add(Component.translatable("jei_enchants.weight.tooltip", enchantment.getRarity().getWeight()));
+            for (int i = 1; i <= enchantment.getMaxLevel(); i++) {
+                rarityTooltip.add(Component.translatable("jei_enchants.level.cost.tooltip", i, enchantment.getMinCost(i), enchantment.getMaxCost(i)));
+            }
+            addTooltips(builder, 18, height, rarityTooltip);
+        }
+        if (Config.enableApplyAtEnchantingTable.get()) {
+            addText(builder, 18, height += 10,
+                    Component.translatable("jei_enchants.applyAtEnchantingTable.desc", getBooleanWrapper(applyAtEnchantingTable(enchantment))));
+        }
+        if (Config.enableIsDiscoverable.get()) {
+            addText(builder, 18, height += 10,
+                    Component.translatable("jei_enchants.isDiscoverable.desc", getBooleanWrapper(enchantment.isDiscoverable())));
+        }
+        if (Config.enableIsTradeable.get()) {
+            addText(builder, 18, height += 10,
+                    Component.translatable("jei_enchants.isTradeable.desc", getBooleanWrapper(enchantment.isTradeable())));
+        }
+        if (Config.enableIsTreasureOnly.get()) {
+            addText(builder, 18, height += 10,
+                    Component.translatable("jei_enchants.isTreasureOnly.desc", getBooleanWrapper(enchantment.isTreasureOnly())));
+        }
+        if (Config.enableIsCurse.get()) {
+            addText(builder, 18, height += 10,
+                    Component.translatable("jei_enchants.isCurse.desc", getBooleanWrapper(enchantment.isCurse())));
+        }
+        if (Config.enableEnchantmentDesc.get()) {
+            height += 10;
+            int xOffset = 0;
+            if (height < 54) {
+                xOffset = 18;
+            }
+            if (I18n.exists(enchantment.getDescriptionId() + ".desc")) {
+                builder.addText(
+                                Minecraft.getInstance().font.getSplitter().splitLines(
+                                        Component.translatable(enchantment.getDescriptionId() + ".desc").withStyle(ChatFormatting.ITALIC),
+                                        getWidth(),
+                                        Style.EMPTY
+                                )
+                                , getWidth() - xOffset, getHeight() - 90)
+                        .setPosition(xOffset, height);
+            } else {
+                builder.addText(Component.translatable("jei_enchants.none.desc"), getWidth() - xOffset, getHeight() - 90)
+                        .setPosition(xOffset, height);
+            }
         }
     }
 

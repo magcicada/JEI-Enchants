@@ -1,6 +1,7 @@
 {
   "jei.category.jei_enchants.enchant": "Enchantment Details",
 
+  "jei_enchants.level.title": "§6  1 - %s",
   "jei_enchants.wrapper.true": "§aYES",
   "jei_enchants.wrapper.false": "§cNO",
 
@@ -11,18 +12,18 @@
   "jei_enchants.weight.tooltip": "Weight: %s",
   "jei_enchants.level.cost.tooltip": "Level %s costs %s–%s",
 
-  "jei_enchants.applyAtEnchantingTable.desc": "Obtainable from Enchanting Table: %s",
-  "jei_enchants.isTradeable.desc": "Obtainable via Trading: %s",
+  "jei_enchants.applyAtEnchantingTable.desc": "Enchanting table: %s",
+  "jei_enchants.isTradeable.desc": "Villagers: %s",
   "jei_enchants.isDiscoverable.desc": "Discoverable: %s",
-  "jei_enchants.isTreasureOnly.desc": "Treasure Enchantment: %s",
-  "jei_enchants.isCurse.desc": "Curse Enchantment: %s",
+  "jei_enchants.isTreasureOnly.desc": "Treasure: %s",
+  "jei_enchants.isCurse.desc": "Curse: %s",
 
   "jei_enchants.none.desc": "No description available",
 
-  "enchantment.rarity.common": "Common",
-  "enchantment.rarity.uncommon": "Uncommon",
-  "enchantment.rarity.rare": "Rare",
-  "enchantment.rarity.very_rare": "Very Rare",
+  "enchantment.rarity.common": "§fCommon",
+  "enchantment.rarity.uncommon": "§eUncommon",
+  "enchantment.rarity.rare": "§9Rare",
+  "enchantment.rarity.very_rare": "§dVery Rare",
   "enchantment.category.armor": "Armor",
   "enchantment.category.armor_feet": "Foot Armor",
   "enchantment.category.armor_legs": "Leg Armor",
