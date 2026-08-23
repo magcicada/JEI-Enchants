@@ -1,7 +1,6 @@
 package net.yiran.jei_enchants.jei.recipes;
 
-import net.yiran.jei_enchants.Config;
-import net.yiran.jei_enchants.JeiEnchants;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -12,28 +11,34 @@ import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.yiran.jei_enchants.Config;
+import net.yiran.jei_enchants.JeiEnchants;
+import net.yiran.jei_enchants.jei.JeiEnchantsPlugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("removal")
-public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
-    public static RecipeType<Enchantment> recipeType = RecipeType.create(JeiEnchants.MODID, "enchant", Enchantment.class);
-    public static Map<Enchantment, List<ItemStack>> EnchantBooksCache = new HashMap<>();
-    public static Map<Enchantment, List<ItemStack>> CanEnchantItemCache = new HashMap<>();
-    public static Map<Enchantment, List<ItemStack>> UnCompatibleEnchantBooksCache = new HashMap<>();
-    public static Map<Enchantment, Boolean> ApplyAtEnchantingTableCache = new HashMap<>();
+public class EnchantJeiRecipe extends AbstractRecipeCategory<Holder<Enchantment>> {
+    @SuppressWarnings({"unchecked"})
+    public static final RecipeType<Holder<Enchantment>> recipeType = RecipeType.create(JeiEnchants.MODID, "enchant", (Class<Holder<Enchantment>>) (Object) Holder.class);
+    public static Map<Holder<Enchantment>, List<ItemStack>> EnchantBooksCache = new Object2ObjectOpenHashMap<>();
+    public static Map<Holder<Enchantment>, List<ItemStack>> CanEnchantItemCache = new Object2ObjectOpenHashMap<>();
+    public static Map<Holder<Enchantment>, List<ItemStack>> UnCompatibleEnchantBooksCache = new Object2ObjectOpenHashMap<>();
+    public static Map<Holder<Enchantment>, Boolean> ApplyAtEnchantingTableCache = new Object2ObjectOpenHashMap<>();
     public static List<ItemStack> CanEnchantStackList = new ArrayList<>();
     public static Component TRUE = Component.translatable("jei_enchants.wrapper.true");
     public static Component FALSE = Component.translatable("jei_enchants.wrapper.false");
@@ -54,7 +59,7 @@ public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
 
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, Enchantment enchantment, IFocusGroup iFocusGroup) {
+    public void setRecipe(IRecipeLayoutBuilder builder, Holder<Enchantment> enchantment, IFocusGroup iFocusGroup) {
         List<ItemStack> books = getAllEnchantedBooks(enchantment);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 0, 0)
                 .setStandardSlotBackground()
@@ -69,38 +74,37 @@ public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
                     .setStandardSlotBackground()
                     .addItemStacks(getUnCompatibleEnchantBook(enchantment))
                     .addTooltipCallback((iRecipeSlotView, list) -> {
-                        list.set(0, Component.translatable("jei_enchants.unCompatible.tooltip", Component.translatable(enchantment.getDescriptionId())));
+                        list.set(0, Component.translatable("jei_enchants.unCompatible.tooltip", enchantment.value().description()));
                     });
     }
 
     @Override
-    public void createRecipeExtras(IRecipeExtrasBuilder builder, Enchantment enchantment, IFocusGroup focuses) {
-        if (enchantment.getMaxLevel() == 1) {
-            addText(builder, 18, 0,
-                    Component.translatable(enchantment.getDescriptionId()));
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, Holder<Enchantment> enchantment, IFocusGroup focuses) {
+        Enchantment enchant = enchantment.value();
+        MutableComponent name = enchant.description().copy();
+        if (enchant.getMaxLevel() == 1) {
+            addText(builder, 18, 0, name);
         } else {
-            addText(builder, 18, 0,
-                    Component.translatable(enchantment.getDescriptionId()).append(I18n.get("jei_enchants.level.title", enchantment.getMaxLevel())));
+            addText(builder, 18, 0, name.append(I18n.get("jei_enchants.level.title", enchant.getMaxLevel())));
         }
         int height = 0;
         if (Config.enableModId.get()) {
             addText(builder, 18, height += 10,
-                    Component.literal(ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getNamespace()).withStyle(ChatFormatting.BLUE));
+                    Component.literal(enchantment.unwrapKey().get().location().getNamespace()).withStyle(ChatFormatting.BLUE));
         }
-        if (Config.enableCategory.get()) {
-            addText(builder, 18, height += 10,
-                    Component.translatable("jei_enchants.category.desc", Component.translatable("enchantment.category." + enchantment.category.name().toLowerCase())));
-        }
-        if (Config.enableRarity.get()) {
-            addText(builder, 18, height += 10,
-                    Component.translatable("jei_enchants.rarity.desc", Component.translatable("enchantment.rarity." + enchantment.getRarity().name().toLowerCase())));
+        if (Config.enableWeight.get()) {
+            addText(builder, 18, height += 10, Component.translatable("jei_enchants.weight.desc", enchant.getWeight()));
 
-            List<FormattedText> rarityTooltip = new ArrayList<>();
-            rarityTooltip.add(Component.translatable("jei_enchants.weight.tooltip", enchantment.getRarity().getWeight()));
-            for (int i = 1; i <= enchantment.getMaxLevel(); i++) {
-                rarityTooltip.add(Component.translatable("jei_enchants.level.cost.tooltip", i, enchantment.getMinCost(i), enchantment.getMaxCost(i)));
+            List<FormattedText> weightTooltip = new ArrayList<>();
+            weightTooltip.add(Component.translatable("jei_enchants.weight.tooltip", enchant.getWeight()));
+            for (int i = 1; i <= enchant.getMaxLevel(); i++) {
+                weightTooltip.add(Component.translatable("jei_enchants.level.cost.tooltip", i, enchant.getMinCost(i), enchant.getMaxCost(i)));
             }
-            addTooltips(builder, 18, height, rarityTooltip);
+            addTooltips(builder, 18, height, weightTooltip);
+        }
+        if (Config.enableIsTradeable.get()) {
+            addText(builder, 18, height += 10,
+                    Component.translatable("jei_enchants.isTradeable.desc", getBooleanWrapper(enchantment.is(EnchantmentTags.TRADEABLE))));
         }
         if (Config.enableApplyAtEnchantingTable.get()) {
             addText(builder, 18, height += 10,
@@ -108,19 +112,15 @@ public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
         }
         if (Config.enableIsDiscoverable.get()) {
             addText(builder, 18, height += 10,
-                    Component.translatable("jei_enchants.isDiscoverable.desc", getBooleanWrapper(enchantment.isDiscoverable())));
+                    Component.translatable("jei_enchants.isDiscoverable.desc", getBooleanWrapper(enchantment.is(EnchantmentTags.ON_RANDOM_LOOT))));
         }
-        if (Config.enableIsTradeable.get()) {
+        if (Config.enableIsTreasure.get()) {
             addText(builder, 18, height += 10,
-                    Component.translatable("jei_enchants.isTradeable.desc", getBooleanWrapper(enchantment.isTradeable())));
-        }
-        if (Config.enableIsTreasureOnly.get()) {
-            addText(builder, 18, height += 10,
-                    Component.translatable("jei_enchants.isTreasureOnly.desc", getBooleanWrapper(enchantment.isTreasureOnly())));
+                    Component.translatable("jei_enchants.isTreasure.desc", getBooleanWrapper(enchantment.is(EnchantmentTags.TREASURE))));
         }
         if (Config.enableIsCurse.get()) {
             addText(builder, 18, height += 10,
-                    Component.translatable("jei_enchants.isCurse.desc", getBooleanWrapper(enchantment.isCurse())));
+                    Component.translatable("jei_enchants.isCurse.desc", getBooleanWrapper(enchantment.is(EnchantmentTags.CURSE))));
         }
         if (Config.enableEnchantmentDesc.get()) {
             height += 10;
@@ -128,10 +128,11 @@ public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
             if (height < 54) {
                 xOffset = 18;
             }
-            if (I18n.exists(enchantment.getDescriptionId() + ".desc")) {
+            String descKey = enchantment.unwrapKey().map(ResourceKey::location).map(location -> location.toLanguageKey("enchantment") + ".desc").orElse("");
+            if (!descKey.isEmpty() && I18n.exists(descKey)) {
                 builder.addText(
                                 Minecraft.getInstance().font.getSplitter().splitLines(
-                                        Component.translatable(enchantment.getDescriptionId() + ".desc").withStyle(ChatFormatting.ITALIC),
+                                        Component.translatable(descKey).withStyle(ChatFormatting.ITALIC),
                                         getWidth(),
                                         Style.EMPTY
                                 )
@@ -163,25 +164,25 @@ public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
                 .setPosition(x, y + 1);
     }
 
-    public static List<ItemStack> getAllEnchantedBooks(Enchantment enchantment) {
+    public static List<ItemStack> getAllEnchantedBooks(Holder<Enchantment> enchantment) {
         if (EnchantBooksCache.containsKey(enchantment)) {
             return EnchantBooksCache.get(enchantment);
         }
         List<ItemStack> list = new ArrayList<>();
-        for (int i = 1; i <= enchantment.getMaxLevel(); i++) {
+        for (int i = 1; i <= enchantment.value().getMaxLevel(); i++) {
             list.add(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, i)));
         }
         EnchantBooksCache.put(enchantment, list);
         return list;
     }
 
-    public static List<ItemStack> getCanEnchantItem(Enchantment enchantment) {
+    public static List<ItemStack> getCanEnchantItem(Holder<Enchantment> enchantment) {
         if (CanEnchantItemCache.containsKey(enchantment)) {
             return CanEnchantItemCache.get(enchantment);
         }
         List<ItemStack> list = new ArrayList<>();
         for (ItemStack stack : CanEnchantStackList) {
-            if (enchantment.canEnchant(stack)) {
+            if (stack.supportsEnchantment(enchantment)) {
                 list.add(stack);
             }
         }
@@ -189,31 +190,35 @@ public class EnchantJeiRecipe extends AbstractRecipeCategory<Enchantment> {
         return list;
     }
 
-    public static List<ItemStack> getUnCompatibleEnchantBook(Enchantment enchantment) {
+    public static List<ItemStack> getUnCompatibleEnchantBook(Holder<Enchantment> enchantment) {
         if (UnCompatibleEnchantBooksCache.containsKey(enchantment)) {
             return UnCompatibleEnchantBooksCache.get(enchantment);
         }
         List<ItemStack> list = new ArrayList<>();
-        for (Enchantment other : ForgeRegistries.ENCHANTMENTS) {
-            if (!enchantment.equals(other) && !enchantment.isCompatibleWith(other)) {
-                list.add(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(other, other.getMaxLevel())));
+        for (Holder<Enchantment> other : JeiEnchantsPlugin.ENCHANTMENTSLIST) {
+            if (!enchantment.equals(other) && !Enchantment.areCompatible(enchantment, other)) {
+                list.add(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(other, other.value().getMaxLevel())));
             }
         }
         UnCompatibleEnchantBooksCache.put(enchantment, list);
         return list;
     }
 
-    public static boolean applyAtEnchantingTable(Enchantment enchantment) {
+    public static boolean applyAtEnchantingTable(Holder<Enchantment> enchantment) {
         if (ApplyAtEnchantingTableCache.containsKey(enchantment)) {
             return ApplyAtEnchantingTableCache.get(enchantment);
         }
+        boolean result = enchantment.is(EnchantmentTags.IN_ENCHANTING_TABLE) && hasPrimaryEnchantableItem(enchantment);
+        ApplyAtEnchantingTableCache.put(enchantment, result);
+        return result;
+    }
+
+    private static boolean hasPrimaryEnchantableItem(Holder<Enchantment> enchantment) {
         for (ItemStack stack : CanEnchantStackList) {
-            if (enchantment.canApplyAtEnchantingTable(stack)) {
-                ApplyAtEnchantingTableCache.put(enchantment, true);
+            if (stack.isPrimaryItemFor(enchantment)) {
                 return true;
             }
         }
-        ApplyAtEnchantingTableCache.put(enchantment, false);
         return false;
     }
 }

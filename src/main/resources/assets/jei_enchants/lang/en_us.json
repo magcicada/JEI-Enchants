@@ -5,8 +5,7 @@
   "jei_enchants.wrapper.true": "§aYES",
   "jei_enchants.wrapper.false": "§cNO",
 
-  "jei_enchants.category.desc": "Category: %s",
-  "jei_enchants.rarity.desc": "Rarity: %s",
+  "jei_enchants.weight.desc": "Weight: %s",
 
   "jei_enchants.unCompatible.tooltip": "Conflicts with enchantment %s",
   "jei_enchants.weight.tooltip": "Weight: %s",
@@ -15,35 +14,8 @@
   "jei_enchants.applyAtEnchantingTable.desc": "Enchanting table: %s",
   "jei_enchants.isTradeable.desc": "Villagers: %s",
   "jei_enchants.isDiscoverable.desc": "Discoverable: %s",
-  "jei_enchants.isTreasureOnly.desc": "Treasure: %s",
+  "jei_enchants.isTreasure.desc": "Treasure: %s",
   "jei_enchants.isCurse.desc": "Curse: %s",
 
-  "jei_enchants.none.desc": "No description available",
-
-  "enchantment.rarity.common": "§fCommon",
-  "enchantment.rarity.uncommon": "§eUncommon",
-  "enchantment.rarity.rare": "§9Rare",
-  "enchantment.rarity.very_rare": "§dVery Rare",
-  "enchantment.category.armor": "Armor",
-  "enchantment.category.armor_feet": "Foot Armor",
-  "enchantment.category.armor_legs": "Leg Armor",
-  "enchantment.category.armor_chest": "Chest Armor",
-  "enchantment.category.armor_head": "Head Armor",
-  "enchantment.category.weapon": "Weapon",
-  "enchantment.category.digger": "Digging Tools",
-  "enchantment.category.fishing_rod": "Fishing Rod",
-  "enchantment.category.trident": "Trident",
-  "enchantment.category.breakable": "Breakable Items",
-  "enchantment.category.bow": "Bow",
-  "enchantment.category.wearable": "Wearable Items",
-  "enchantment.category.crossbow": "Crossbow",
-  "enchantment.category.vanishable": "Vanishable Items",
-  "enchantment.category.hoe": "Hoe",
-  "enchantment.category.shield": "Shield",
-  "enchantment.category.anvil": "Anvil",
-  "enchantment.category.shears": "Shears",
-  "enchantment.category.pickaxe": "Pickaxe",
-  "enchantment.category.axe": "Axe",
-  "enchantment.category.core_armor": "Chest and Leg Armor",
-  "enchantment.category.apotheosis.null": "N/A"
+  "jei_enchants.none.desc": "No description available"
 }

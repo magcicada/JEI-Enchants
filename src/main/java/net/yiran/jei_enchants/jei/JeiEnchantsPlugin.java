@@ -1,19 +1,29 @@
 package net.yiran.jei_enchants.jei;
 
-import net.yiran.jei_enchants.JeiEnchants;
-import net.yiran.jei_enchants.jei.recipes.EnchantJeiRecipe;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.yiran.jei_enchants.JeiEnchants;
+import net.yiran.jei_enchants.jei.recipes.EnchantJeiRecipe;
+
+import java.util.List;
 
 @JeiPlugin
 public class JeiEnchantsPlugin implements IModPlugin {
+    public static Registry<Enchantment> ENCHANTMENTS;
+    public static List<Holder<Enchantment>> ENCHANTMENTSLIST;
+
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(JeiEnchants.MODID, JeiEnchants.MODID);
+        return ResourceLocation.fromNamespaceAndPath(JeiEnchants.MODID, JeiEnchants.MODID);
     }
 
     @Override
@@ -23,6 +33,7 @@ public class JeiEnchantsPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(EnchantJeiRecipe.recipeType, ForgeRegistries.ENCHANTMENTS.getValues().stream().toList());
+        ENCHANTMENTS = Minecraft.getInstance().getConnection().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        registration.addRecipes(EnchantJeiRecipe.recipeType, ENCHANTMENTSLIST = ENCHANTMENTS.holders().collect(ObjectArrayList.toList()));
     }
 }

@@ -1,35 +1,30 @@
 package net.yiran.jei_enchants;
 
 import net.yiran.jei_enchants.jei.recipes.EnchantJeiRecipe;
-import com.mojang.logging.LogUtils;
-import net.minecraft.world.item.*;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
-import org.slf4j.Logger;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
-@SuppressWarnings("removal")
 @Mod(JeiEnchants.MODID)
 public class JeiEnchants {
     public static final String MODID = "jei_enchants";
-    private static final Logger LOGGER = LogUtils.getLogger();
 
-    public JeiEnchants() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+    public JeiEnchants(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
 
-        FMLJavaModLoadingContext.get().registerConfig(
+        modContainer.registerConfig(
                 ModConfig.Type.CLIENT,
                 Config.SPEC
         );
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        for (Item item : ForgeRegistries.ITEMS) {
+        for (Item item : BuiltInRegistries.ITEM) {
             ItemStack stack = item.getDefaultInstance();
             if (item.isEnchantable(stack)) {
                 EnchantJeiRecipe.CanEnchantStackList.add(stack);
