@@ -8,8 +8,11 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.yiran.jei_enchants.JeiEnchants;
 import net.yiran.jei_enchants.jei.recipes.EnchantJeiRecipe;
@@ -34,6 +37,18 @@ public class JeiEnchantsPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         ENCHANTMENTS = Minecraft.getInstance().getConnection().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+
+        EnchantJeiRecipe.CanEnchantStackList.clear();
+        EnchantJeiRecipe.CanEnchantItemCache.clear();
+        EnchantJeiRecipe.ApplyAtEnchantingTableCache.clear();
+
+        for (Item item : BuiltInRegistries.ITEM) {
+            ItemStack stack = item.getDefaultInstance();
+            if (item.isEnchantable(stack)) {
+                EnchantJeiRecipe.CanEnchantStackList.add(stack);
+            }
+        }
+
         registration.addRecipes(EnchantJeiRecipe.recipeType, ENCHANTMENTSLIST = ENCHANTMENTS.holders().collect(ObjectArrayList.toList()));
     }
 }
